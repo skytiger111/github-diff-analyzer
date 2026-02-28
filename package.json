@@ -1,0 +1,28 @@
+{
+    "name": "github-diff-analyzer",
+    "version": "1.0.0",
+    "description": "分析 GitHub 專案的 diff，透過 Gemini AI 產生人話版異動說明，輸出 CSV 報表",
+    "type": "module",
+    "main": "src/index.js",
+    "bin": {
+        "diff-analyzer": "src/index.js"
+    },
+    "scripts": {
+        "start": "node src/index.js"
+    },
+    "keywords": [
+        "github",
+        "diff",
+        "analyzer",
+        "gemini",
+        "ai"
+    ],
+    "author": "Skytiger",
+    "license": "MIT",
+    "dependencies": {
+        "commander": "^13.1.0",
+        "dotenv": "^16.4.7",
+        "exceljs": "^4.4.0",
+        "parse-diff": "^0.11.1"
+    }
+}

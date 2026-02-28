@@ -62,6 +62,56 @@ node src/index.js --repo https://github.com/user/repo --output result.xlsx
 - Git
 - `OPENROUTER_API_KEY` 設定在 `d:\code\.env` 中
 
+## 🏢 企業內部部署情境
+
+本工具支援企業內部 Git 與 LLM，**全程不出內網**，適合有資安需求的環境。
+
+### 支援的 Git 平台
+
+| 平台 | 範例 |
+|---|---|
+| GitHub Enterprise | `--repo https://github.yourcompany.com/org/repo` |
+| GitLab | `--repo https://gitlab.yourcompany.com/org/repo` |
+| Bitbucket | `--repo https://bitbucket.yourcompany.com/org/repo` |
+| SSH 認證 | `--repo git@github.yourcompany.com:org/repo.git` |
+
+只要你的機器能 `git clone` 該 repo（已設定 SSH Key 或 Token），即可直接使用。
+
+### 切換為企業內部 LLM（LiteLLM Gateway）
+
+修改 `src/ai-analyzer.js` 中的兩個常數即可：
+
+```javascript
+// 改為你的 LiteLLM Gateway 網址
+const OPENROUTER_BASE = 'https://your-litellm-gateway.yourcompany.com/chat/completions';
+
+// 改為 LiteLLM 上設定的模型名稱
+const MODEL = 'your-internal-model-name';
+```
+
+並在 `.env` 中設定 LiteLLM 的 API Key：
+
+```env
+OPENROUTER_API_KEY=sk-your-litellm-key
+```
+
+> **💡 提示：** LiteLLM 使用 OpenAI-compatible API 格式，因此 Header 和 Request Body 完全相容，其他程式碼不需要任何修改。
+
+### 支援的企業 LLM 方案
+
+| 方案 | 相容性 | 備註 |
+|---|---|---|
+| **LiteLLM** | ✅ 完全相容 | 推薦，統一所有 LLM 介面 |
+| **vLLM / TGI** | ✅ 原生相容 | 自架開源模型 |
+| **Ollama** | ✅ 原生相容 | 本機部署，endpoint: `http://localhost:11434/v1/chat/completions` |
+| **Azure OpenAI** | ✅ 需調整 | 改 endpoint + 加 `api-version` header |
+| **AWS Bedrock** | ⚠️ 需轉接 | 透過 LiteLLM 代理即可 |
+
+### 模型建議
+
+- 中文摘要品質建議至少使用 **70B** 等級模型（如 Qwen2.5-72B）
+- 大型 diff 需要 **32K+** context window，請確認模型支援
+
 ---
 
 Developed with ❤️ by Skytiger & **Google Deepmind Antigravity Team**
